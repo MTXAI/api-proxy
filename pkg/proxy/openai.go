@@ -1,12 +1,15 @@
 package proxy
 
 import (
+	"bytes"
+	"encoding/json"
 	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"strings"
 
+	"github.com/mtxai/api-proxy/pkg/proto"
 	"github.com/mtxai/api-proxy/pkg/utils"
 )
 
@@ -72,7 +75,7 @@ func (proxy *openAI) modifyRequest(director func(req *http.Request)) func(*httpu
 		outReq := proxyReq.Out
 		director(outReq)
 
-		if !proxy.CheckIsAPISupported(outReq.URL.Path) {
+		if !proxy.IsAPISupported(outReq.URL.Path) {
 			return
 		}
 
@@ -111,7 +114,7 @@ func (proxy *openAI) modifyResponse() func(resp *http.Response) (err error) {
 			return nil
 		}
 
-		if !proxy.CheckIsAPISupported(req.URL.Path) {
+		if !proxy.IsAPISupported(req.URL.Path) {
 			return nil
 		}
 
@@ -127,9 +130,24 @@ func (proxy *openAI) errorHandler() func(rw http.ResponseWriter, req *http.Reque
 	}
 }
 
-func (proxy *openAI) CheckIsAPISupported(path string) bool {
+func (proxy *openAI) IsAPISupported(path string) bool {
 	if strings.HasPrefix(path, "/v1") {
 		return true
 	}
 	return false
+}
+
+func (proxy *openAI) PerformStatistics(path string, body *bytes.Buffer) {
+	if strings.Contains(path, "chat") {
+		var chatResp proto.ChatResponse
+		_ = json.Unmarshal(body.Bytes(), &chatResp)
+
+		// just for test
+		// todo Perform statistics here
+		if chatResp.Error != nil {
+			slog.Debug("request error", "path", path, "error", chatResp.Error)
+		} else {
+			slog.Debug("request usage", "path", path, "usage", chatResp.Usage)
+		}
+	}
 }

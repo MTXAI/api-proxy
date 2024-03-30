@@ -14,14 +14,14 @@ import (
 
 var (
 	// common config
-	logDirFlag = flag.String("logs-dir", "./logs", "output logs dir, --logs-dir=./logs")
-	debugFlag  = flag.Bool("debug", false, "debug logs level, --debug (default false)")
-	stdoutFlag = flag.Bool("stdout", false, "output logs stdout, --stdout (default false)")
-	addrFlag   = flag.String("addr", "0.0.0.0", "listen addr, --addr=0.0.0.0")
-	portFlag   = flag.Int("port", 6789, "listen port, --port=6789")
+	logDirFlag = flag.String("logs-dir", "./logs", "output log to file in dir, --logs-dir=./logs")
+	debugFlag  = flag.Bool("debug", false, "debug log level, --debug (default false)")
+	stdoutFlag = flag.Bool("stdout", false, "also output log to stdout, --stdout (default false)")
+	addrFlag   = flag.String("addr", "0.0.0.0", "server listen addr, --addr=0.0.0.0")
+	portFlag   = flag.Int("port", 6789, "server listen port, --port=6789")
 
 	// proxy config
-	remoteAddrFlag = flag.String("remote-addr", "api.openai.com", "openai api addr, --openai-addr=api.openai.com")
+	remoteAddrFlag = flag.String("remote-addr", "api.openai.com", "remote api addr, --remote-addr=api.openai.com")
 	clientCertFile = flag.String("client-cert-file", "", "client cert file, --client-cert-file=./client/ca-cert.pem")
 	clientKeyFile  = flag.String("client-key-file", "", "client key file, --client-key-file=./client/ca-key.pem")
 

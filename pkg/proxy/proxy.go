@@ -1,6 +1,7 @@
 package proxy
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 )
@@ -9,7 +10,8 @@ type (
 	Proxy interface {
 		http.Handler
 		http.RoundTripper
-		CheckIsAPISupported(path string) bool
+		IsAPISupported(path string) bool
+		PerformStatistics(path string, body *bytes.Buffer)
 	}
 	proxyConfig struct {
 		remoteAddr string
@@ -25,7 +27,7 @@ func OpenAI(remoteAddr string, opts ...Option) (Proxy, error) {
 		return nil, fmt.Errorf("remote address must set")
 	}
 	cfg := &proxyConfig{
-		remoteAddr: remoteAddr + ":443",
+		remoteAddr: remoteAddr,
 	}
 
 	for _, o := range opts {
@@ -36,6 +38,7 @@ func OpenAI(remoteAddr string, opts ...Option) (Proxy, error) {
 
 func WithTLS(certFile, keyFile string) Option {
 	return func(cfg *proxyConfig) {
+		cfg.remoteAddr = cfg.remoteAddr + ":443"
 		cfg.certFile = certFile
 		cfg.keyFile = keyFile
 	}
