@@ -47,5 +47,5 @@ func (srv *Server) RegisterMiddleware() {
 		)
 	}))
 	srv.Use(gin.Recovery())
-	srv.Use(PerformStatisticsMiddleware(srv.p))
+	srv.Use(APIProxyStatisticsMiddleware(srv.p))
 }
