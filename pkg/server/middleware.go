@@ -10,6 +10,7 @@ import (
 func APIProxyStatisticsMiddleware(p proxy.Proxy) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !p.IsAPISupported(c.Request.URL.Path) {
+			c.Next()
 			return
 		}
 		w := &CustomResponseWriter{
