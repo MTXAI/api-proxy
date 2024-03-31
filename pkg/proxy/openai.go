@@ -71,7 +71,6 @@ func (proxy *openAI) modifyRequest(director func(req *http.Request)) func(*httpu
 
 	return func(proxyReq *httputil.ProxyRequest) {
 		// rewrite url, replace addr with remote addr
-		inReq := proxyReq.In
 		outReq := proxyReq.Out
 		director(outReq)
 
@@ -80,11 +79,11 @@ func (proxy *openAI) modifyRequest(director func(req *http.Request)) func(*httpu
 		}
 
 		// modify request header
-		outReq.Header.Set("X-Forwarded-For", inReq.Header.Get("X-Forwarded-For"))
-		outReq.Header.Set("X-Real-IP", inReq.Header.Get("X-Real-IP"))
+		outReq.Header.Del("X-Forwarded-For")
+		outReq.Header.Del("X-Real-IP")
 		outReq.Header.Set("Host", proxy.remoteServer.Host)
 		outReq.Host = proxy.remoteServer.Host
-		outReq.RemoteAddr = inReq.RemoteAddr
+		outReq.RemoteAddr = ""
 	}
 }
 
