@@ -47,7 +47,6 @@ Usage detail
 ```shell
 ./output/openai-proxy -h
 
-Usage of C:\Users\ZJH\AppData\Local\Temp\go-build1443404446\b001\exe\main.exe:
   -addr string
         listen addr, --addr=0.0.0.0 (default "0.0.0.0")
   -client-cert-file string
